@@ -1,0 +1,26 @@
+makeCacheMatrix=function(x=matrix()){
+  invertable<-NULL
+  set<-function(z){
+    x<<-z
+    invertable<<-NULL
+  }
+  get=function(){x}
+  setInverse=function(inverse){invertable<<-inverse}
+  getInverse=function(){invertable}
+  list(set~set,get~get,setInverse~setInverse,getInverse~getInverse)
+}
+
+cachesolve=function(x,...){
+  invertable<-x$getInverse()
+  if(!is.null(invertable)){
+    message("getting cached data")
+    return(invertable)
+  }
+  matrix=x$get()
+  invertable=solve(matrix,...)
+  x$setInverse(invertable)
+  invertable
+}
+pmatrix=makeCacheMatrix(matrix(1:16,4,4))
+pmatrix$getInverse()
+cachesolve(pmatrix)
